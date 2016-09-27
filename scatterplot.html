@@ -1,0 +1,704 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Visual Analytics Project 1</title>
+    <link rel="stylesheet" href="css/bootstrap.min.css">
+    <script src="js/jquery-3.1.0.min.js"></script>
+    <script src="js/bootstrap.min.js"></script>
+    <script src="js/d3.v3.min.js"></script>
+    <script src="js/PapaParse-4.1.2/papaparse.min.js"></script>
+    <script src="js/readFiles.js"></script>
+    <style>
+
+        #ex1Slider .slider-selection {
+            background: #BABABA;
+        }
+        select{
+            background-color: #c7c7ff;
+            border-radius: 5px;
+            padding: 5px;
+        }
+        input[type=range] {
+            -webkit-appearance: none;
+            margin: 18px 0;
+            width: 100%;
+        }
+        input[type=range]:focus {
+            outline: none;
+        }
+        input[type=range]::-webkit-slider-runnable-track {
+            width: 100%;
+            height: 8.4px;
+            cursor: pointer;
+            animate: 0.2s;
+            box-shadow: 1px 1px 1px #000000, 0px 0px 1px #0d0d0d;
+            /*background: #3071a9;*/
+            background: #c7c7ff;
+            border-radius: 1.3px;
+            border: 0.2px solid #010101;
+        }
+        input[type=range]::-webkit-slider-thumb {
+            box-shadow: 1px 1px 1px #000000, 0px 0px 1px #0d0d0d;
+            border: 1px solid #000000;
+            height: 26px;
+            width: 16px;
+            border-radius: 3px;
+            background: #ffffff;
+            cursor: pointer;
+            -webkit-appearance: none;
+            margin-top: -10px;
+        }
+        input[type=range]:focus::-webkit-slider-runnable-track {
+            background: #c7c7ff;
+        }
+        input[type=range]::-moz-range-track {
+            width: 100%;
+            height: 8.4px;
+            cursor: pointer;
+            animate: 0.2s;
+            box-shadow: 1px 1px 1px #000000, 0px 0px 1px #0d0d0d;
+            background: #c7c7ff;
+            border-radius: 1.3px;
+            border: 0.2px solid #010101;
+        }
+        input[type=range]::-moz-range-thumb {
+            box-shadow: 1px 1px 1px #000000, 0px 0px 1px #0d0d0d;
+            border: 1px solid #000000;
+            height: 36px;
+            width: 16px;
+            border-radius: 3px;
+            background: #ffffff;
+            cursor: pointer;
+        }
+        input[type=range]::-ms-track {
+            width: 100%;
+            height: 8.4px;
+            cursor: pointer;
+            animate: 0.2s;
+            background: transparent;
+            border-color: transparent;
+            border-width: 16px 0;
+            color: transparent;
+        }
+        input[type=range]::-ms-fill-lower {
+            background: #c7c7ff;
+            border: 0.2px solid #010101;
+            border-radius: 2.6px;
+            box-shadow: 1px 1px 1px #000000, 0px 0px 1px #0d0d0d;
+        }
+        input[type=range]::-ms-fill-upper {
+            background: #c7c7ff;
+            border: 0.2px solid #010101;
+            border-radius: 2.6px;
+            box-shadow: 1px 1px 1px #000000, 0px 0px 1px #0d0d0d;
+        }
+        input[type=range]::-ms-thumb {
+            box-shadow: 1px 1px 1px #000000, 0px 0px 1px #0d0d0d;
+            border: 1px solid #000000;
+            height: 36px;
+            width: 16px;
+            border-radius: 3px;
+            background: #ffffff;
+            cursor: pointer;
+        }
+        input[type=range]:focus::-ms-fill-lower {
+            background: #c7c7ff;
+        }
+        input[type=range]:focus::-ms-fill-upper {
+            background: #c7c7ff;
+        }
+    </style>
+</head>
+
+<body>
+<div class="container">
+    <h2>Visual Analytics Project 1</h2>
+
+
+
+    <div class="tab-content">
+        <div id="bar" class="tab-pane fade in active">
+            <div>
+                <svg id="scatterChart" class="col-md-10" width="1000" height="600" style="border: 5px solid black;margin-top:20px;">
+                    <text id="label" x="100" y="70"></text>
+                </svg>
+            </div>
+            <div class="col-md-2">
+                <div class="row" style="margin-top: 20px; margin-left:10px;">
+                    <select id="selectDatasetScatter" style="">
+                        <option value="totalPrimaryConsumption">Total Primary Energy Consumption</option>
+                        <option value="totalPrimaryProduction">Total Primary Energy Production</option>
+                        <option value="totalElectricityConsumption">Total Electricity Consumption</option>
+                        <option value="totalElectricityGeneration">Total Electricity Generation</option>
+                        <option value="renewableElectricityConsumption">Renewable Electricity Consumption</option>
+                        <option value="renewableElectricityProduction">Renewable Electricity Production</option>
+                        <option value="renewableBiofuelConsumption">Renewable Biofuel Consumption</option>
+                        <option value="renewableBiofuelProduction">Renewable Biofuel Production</option>
+                        <option value="petroleumConsumption">Petroleum Consumption</option>
+                        <option value="petroleumProduction">Petroleum Production</option>
+                        <option value="coalConsumption">Coal Consumption</option>
+                        <option value="coalProduction">Coal Production</option>
+                        <option value="co2Emission">CO2 Emission</option>
+                    </select>
+
+                </div>
+
+                <div class="row" style="margin-top: 20px; margin-left:10px;">
+                    <select id="selectDatasetScatter1" style="">
+                        <option value="totalPrimaryConsumption">Total Primary Energy Consumption</option>
+                        <option value="totalPrimaryProduction">Total Primary Energy Production</option>
+                        <option value="totalElectricityConsumption">Total Electricity Consumption</option>
+                        <option value="totalElectricityGeneration">Total Electricity Generation</option>
+                        <option value="renewableElectricityConsumption">Renewable Electricity Consumption</option>
+                        <option value="renewableElectricityProduction">Renewable Electricity Production</option>
+                        <option value="renewableBiofuelConsumption">Renewable Biofuel Consumption</option>
+                        <option value="renewableBiofuelProduction">Renewable Biofuel Production</option>
+                        <option value="petroleumConsumption">Petroleum Consumption</option>
+                        <option value="petroleumProduction">Petroleum Production</option>
+                        <option value="coalConsumption">Coal Consumption</option>
+                        <option value="coalProduction">Coal Production</option>
+                        <option value="co2Emission">CO2 Emission</option>
+                    </select>
+
+                </div>
+                <div class="row" style="margin-top: 20px; margin-left:10px;">
+                    <select id="selectDatasetScatter2" style="">
+                        <option value="totalPrimaryConsumption">Total Primary Energy Consumption</option>
+                        <option value="totalPrimaryProduction">Total Primary Energy Production</option>
+                        <option value="totalElectricityConsumption">Total Electricity Consumption</option>
+                        <option value="totalElectricityGeneration">Total Electricity Generation</option>
+                        <option value="renewableElectricityConsumption">Renewable Electricity Consumption</option>
+                        <option value="renewableElectricityProduction">Renewable Electricity Production</option>
+                        <option value="renewableBiofuelConsumption">Renewable Biofuel Consumption</option>
+                        <option value="renewableBiofuelProduction">Renewable Biofuel Production</option>
+                        <option value="petroleumConsumption">Petroleum Consumption</option>
+                        <option value="petroleumProduction">Petroleum Production</option>
+                        <option value="coalConsumption">Coal Consumption</option>
+                        <option value="coalProduction">Coal Production</option>
+                        <option value="co2Emission">CO2 Emission</option>
+                    </select>
+
+                </div>
+                <!--<div class="row" style="margin-top: 20px; margin-left:10px;">
+                    <select id="selectYear1" style="">
+
+                    </select>
+                </div>-->
+                <div class="row" style="margin-top: 20px; margin-left:10px;">
+                    <span>1980</span>
+                    <span><input type="range" id="selectYearScatter" min="1980" max="2012" value="1980" style="position: absolute;top: 170px;left: 60px;width: 80%;" > </span>
+                    <span style="position: absolute;top: 170px;left: 220px;">2012</span>
+                    <span id="currentYearScatter" style="position: absolute;top: 200px;left: 120px;">1980</span>
+                    <button class="btn btn-primary" id="playButtonScatter"style="position: absolute;top: 230px;left: 110px;">Play</button>
+                </div>
+                <div class="row" style="margin-top: 20px; margin-left:10px;">
+                    <svg id="pieChartScatter" width="250" height="400">
+                        <text id="label" x="100" y="70"></text>
+                    </svg>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    var localities = {};
+    var listofLocalities = [];
+    var dataset, dataset1, year, localityName;
+    var majorRegions = [];
+    var clicked = "false";
+    var pieData = [];
+    var focusonregion;
+
+    d3.select("#selectDatasetScatter")
+            .on('change', function() {
+
+                // figure out the newly selected locality
+                var selection = $('#selectYearScatter').get(0);
+                //year = selection.options[selection.selectedIndex].value;
+                year = selection.value;
+                var selection = $('#selectDatasetScatter').get(0);
+                if(clicked=="true")
+                    dataset = getSpecificDatasetScatter(selection.options[selection.selectedIndex].value, year);
+                else
+                    dataset = getDatasetScatter(selection.options[selection.selectedIndex].value, year);
+                var selection = $('#selectDatasetScatter1').get(0);
+                if(clicked=="true")
+                    dataset1 = getSpecificDatasetScatter(selection.options[selection.selectedIndex].value, year);
+                else
+                    dataset1 = getDatasetScatter(selection.options[selection.selectedIndex].value, year);
+                var selection = $('#selectDatasetScatter2').get(0);
+                if(clicked=="true")
+                    dataset2 = getSpecificDatasetScatter(selection.options[selection.selectedIndex].value, year);
+                else
+                    dataset2 = getDatasetScatter(selection.options[selection.selectedIndex].value, year);
+
+                // re-draw bar chart for the new locality
+                drawScatterChart(dataset, dataset1, dataset2, year);
+                drawPieChart();
+            });
+    d3.select("#selectDatasetScatter1")
+            .on('change', function() {
+
+                // figure out the newly selected locality
+                var selection = $('#selectYearScatter').get(0);
+                //year = selection.options[selection.selectedIndex].value;
+                year = selection.value;
+                var selection = $('#selectDatasetScatter').get(0);
+                if(clicked=="true")
+                    dataset = getSpecificDatasetScatter(selection.options[selection.selectedIndex].value, year);
+                else
+                    dataset = getDatasetScatter(selection.options[selection.selectedIndex].value, year);
+                var selection = $('#selectDatasetScatter1').get(0);
+                if(clicked=="true")
+                    dataset1 = getSpecificDatasetScatter(selection.options[selection.selectedIndex].value, year);
+                else
+                    dataset1 = getDatasetScatter(selection.options[selection.selectedIndex].value, year);
+                var selection = $('#selectDatasetScatter2').get(0);
+                if(clicked=="true")
+                    dataset2 = getSpecificDatasetScatter(selection.options[selection.selectedIndex].value, year);
+                else
+                    dataset2 = getDatasetScatter(selection.options[selection.selectedIndex].value, year);
+
+                // re-draw bar chart for the new locality
+                drawScatterChart(dataset, dataset1, dataset2, year);
+                drawPieChart();
+            });
+    d3.select("#selectDatasetScatter2")
+            .on('change', function() {
+
+                // figure out the newly selected locality
+                var selection = $('#selectYearScatter').get(0);
+                //year = selection.options[selection.selectedIndex].value;
+                year = selection.value;
+                var selection = $('#selectDatasetScatter').get(0);
+                if(clicked=="true")
+                    dataset = getSpecificDatasetScatter(selection.options[selection.selectedIndex].value, year);
+                else
+                    dataset = getDatasetScatter(selection.options[selection.selectedIndex].value, year);
+                var selection = $('#selectDatasetScatter1').get(0);
+                if(clicked=="true")
+                    dataset1 = getSpecificDatasetScatter(selection.options[selection.selectedIndex].value, year);
+                else
+                    dataset1 = getDatasetScatter(selection.options[selection.selectedIndex].value, year);
+                var selection = $('#selectDatasetScatter2').get(0);
+                if(clicked=="true")
+                    dataset2 = getSpecificDatasetScatter(selection.options[selection.selectedIndex].value, year);
+                else
+                    dataset2 = getDatasetScatter(selection.options[selection.selectedIndex].value, year);
+
+                // re-draw bar chart for the new locality
+                drawScatterChart(dataset, dataset1, dataset2, year);
+                drawPieChart();
+            });
+    d3.select("#selectYearScatter")
+            .on('input', function() {
+
+                // figure out the newly selected locality
+                var selection = $('#selectYearScatter').get(0);
+                year = selection.value;
+                var selection = $('#selectDatasetScatter').get(0);
+                if(clicked=="true")
+                    dataset = getSpecificDatasetScatter(selection.options[selection.selectedIndex].value, year);
+                else
+                    dataset = getDatasetScatter(selection.options[selection.selectedIndex].value, year);
+                var selection = $('#selectDatasetScatter1').get(0);
+                if(clicked=="true")
+                    dataset1 = getSpecificDatasetScatter(selection.options[selection.selectedIndex].value, year);
+                else
+                    dataset1 = getDatasetScatter(selection.options[selection.selectedIndex].value, year);
+                var selection = $('#selectDatasetScatter2').get(0);
+                if(clicked=="true")
+                    dataset2 = getSpecificDatasetScatter(selection.options[selection.selectedIndex].value, year);
+                else
+                    dataset2 = getDatasetScatter(selection.options[selection.selectedIndex].value, year);
+
+                $("#currentYearScatter").get(0).innerHTML = year;
+
+                // re-draw bar chart for the new locality
+                drawScatterChart(dataset, dataset1, dataset2, year);
+                drawPieChart();
+            });
+    function getSpecificDatasetScatter(variable, year){
+        var Data = {
+            name: [],
+            array: []
+        };
+        t= majorRegions.indexOf(focusonregion);
+        listofLocalities.forEach(function(entry) {
+            if (listofLocalities.indexOf(entry) > listofLocalities.indexOf(focusonregion) && listofLocalities.indexOf(entry) < listofLocalities.indexOf(majorRegions[t+1])) {                Data.name.push(entry);
+                Data.array.push((localities[entry][variable])[year - 1980]);
+            }
+
+        });
+        return Data;
+    }
+    function getDatasetScatter(variable, year) {
+        var Data = {
+            name: [],
+            array: []
+        };
+
+                listofLocalities.forEach(function(entry) {
+                    if (majorRegions.indexOf(entry) == -1) {
+                        Data.name.push(entry);
+                        Data.array.push((localities[entry][variable])[year - 1980]);
+                    }
+                    else{
+                        pieData.push({
+                            name:entry,
+                            array:(localities[entry][variable])[year - 1980]
+                        });
+                    }
+                });
+
+        return Data;
+    }
+
+    function loadpage() {
+
+        d3.select('#selectRegionScatter').selectAll('option').data(
+                listofLocalities).enter().append('option')
+                .html(function(d) {
+                    return d;
+                })
+                .attr('value', function(d) {
+                    return d;
+                });
+        for (var i = 0; i < listofLocalities.length; i++) {
+            if (["North America","Central & South America","Europe","Eurasia","Middle East", "Africa", "Asia & Oceania","World"].indexOf(listofLocalities[i]) != -1) {
+                majorRegions.push(listofLocalities[i]);
+            }
+        }
+        var years = [32];
+        for (var i = 1980; i < 2013; i++) {
+            years[i - 1980] = i;
+        }
+
+        var selection = $('#selectYearScatter').get(0);
+        //year = selection.options[selection.selectedIndex].value;
+        year = selection.value;
+
+        dataset = getDatasetScatter("totalPrimaryConsumption", year);
+
+        dataset1 = getDatasetScatter("totalPrimaryConsumption", year);
+
+        dataset2 = getDatasetScatter("totalPrimaryConsumption", year);
+
+        drawScatterChart(dataset, dataset1, dataset2);
+        drawPieChart();
+    }
+
+    //var c10 = d3.scale.category10();
+    //var c20 = d3.scale.category20();
+    //var c20b = d3.scale.category20b();
+    //var c20c = d3.scale.category20c();
+    function drawScatterChart(variable, variable1, variable2) {
+        // get energy production for USA
+        //var energyProductionUSA = localities[localityName].energyProduction;
+
+        // figure out maximum energy production
+
+        var maxValuex = d3.max(variable.array);
+        var maxValuey = d3.max(variable1.array);
+        var maxValuer = d3.max(variable2.array);
+
+        // chart size
+        var chartWidth = 700;
+        var chartHeight = 420;
+
+
+        // create a y scale
+        var yScale = d3.scale.linear()
+                .domain([0, maxValuey])
+                .range([chartHeight, 0]);
+
+        var xScale = d3.scale.linear()
+                .domain([0, maxValuex])
+                .range([0, chartWidth]);
+
+        var rScale = d3.scale.linear()
+                .domain([0, maxValuer])
+                .range([2, 15]);
+
+        // create a group for the bar chart
+        d3.select("#label")
+                .html(localityName +
+                        ": Total Primary Energy Production (Quadrillion BTU)"
+                );
+
+        d3.select("#scatterChart").selectAll('g').remove();
+        var group = d3.select("#scatterChart").append("g")
+                .attr("transform", "translate(100, 100)");
+
+        group.selectAll("circle").data(variable.name).enter().append(
+                'circle')
+                .attr("cx", function(d, i) {
+                    if (majorRegions.indexOf(d) == -1)
+                    return xScale(variable.array[variable.name.indexOf(d)]);
+                })
+                .attr("cy", function(d, i) {
+                    if (majorRegions.indexOf(d) == -1)
+                    return yScale(variable1.array[variable1.name.indexOf(d)]);
+                })
+                .attr("r", function(d, i) {
+                    if (majorRegions.indexOf(d) == -1)
+                    return rScale(variable2.array[variable2.name.indexOf(d)]);
+                })
+                .style("opacity",function(d){
+                    if(focusonregion != null) {
+                        var t = majorRegions.indexOf(focusonregion);
+                        if (listofLocalities.indexOf(d) > listofLocalities.indexOf(majorRegions[t]) &&
+                                listofLocalities.indexOf(d) < listofLocalities.indexOf(majorRegions[t + 1])) {
+                            return 1;
+                        }
+                        else {
+                            return 0.2;
+                        }
+                    }
+                })
+                .style("fill", function(d, i) {
+                    if (listofLocalities.indexOf(d) >
+                            listofLocalities.indexOf(majorRegions[0]) &&
+                            listofLocalities.indexOf(d) <
+                            listofLocalities.indexOf(majorRegions[1])
+                    ) {
+                        return colores_google(0);
+                    }
+                    if (listofLocalities.indexOf(d) >
+                            listofLocalities.indexOf(majorRegions[1]) &&
+                            listofLocalities.indexOf(d) <
+                            listofLocalities.indexOf(majorRegions[2])
+                    ) {
+                        return colores_google(1);
+                    }
+                    if (listofLocalities.indexOf(d) >
+                            listofLocalities.indexOf(majorRegions[2]) &&
+                            listofLocalities.indexOf(d) <
+                            listofLocalities.indexOf(majorRegions[3])
+                    ) {
+                        return colores_google(2);;
+                    }
+                    if (listofLocalities.indexOf(d) >
+                            listofLocalities.indexOf(majorRegions[3]) &&
+                            listofLocalities.indexOf(d) <
+                            listofLocalities.indexOf(majorRegions[4])
+                    ) {
+                        return colores_google(3);
+                    }
+                    if (listofLocalities.indexOf(d) >
+                            listofLocalities.indexOf(majorRegions[4]) &&
+                            listofLocalities.indexOf(d) <
+                            listofLocalities.indexOf(majorRegions[5])
+                    ) {
+                        return colores_google(4);;
+                    }
+                    if (listofLocalities.indexOf(d) >
+                            listofLocalities.indexOf(majorRegions[5]) &&
+                            listofLocalities.indexOf(d) <
+                            listofLocalities.indexOf(majorRegions[6])
+                    ) {
+                        return colores_google(5);
+                    }
+                    if (listofLocalities.indexOf(d) >
+                            listofLocalities.indexOf(majorRegions[6]) &&
+                            listofLocalities.indexOf(d) <
+                            listofLocalities.indexOf(majorRegions[7])
+                    ) {
+                        return colores_google(6);
+                    }
+
+
+                })
+                .on("mouseover", function(d, i) {
+                    d3.select("#scatterChart").append("rect")
+                            .attr("transform", "translate(100, 50)")
+                            .style("fill", "white")
+                            .style("stroke", "black")
+                            .attr("width", "130")
+                            .attr("height", "30")
+                            .attr({
+                                id: "r" + i, // Create an id for text so we can select it later for removing on mouseout
+                                x: function() {
+                                    return 10;
+                                },
+                                y: function() {
+                                    return 10;
+                                }
+                            });
+
+                    d3.select("#scatterChart").append("text")
+                            .attr("transform", "translate(100, 50)")
+                            .attr({
+                                id: "t" + i, // Create an id for text so we can select it later for removing on mouseout
+                                x: function() {
+                                    return 20;
+                                },
+                                y: function() {
+                                    return 20;
+                                }
+                            })
+                            .text(function() {
+                                return d;
+                            });
+                })
+                .on("mouseout", function(d, i) {
+
+                    d3.select("#t" + i).remove(); // Remove text location
+                    d3.select("#r" + i).remove(); // Remove text location
+                });
+
+        var xAxis = d3.svg.axis()
+                .scale(xScale)
+                .orient('bottom');
+
+        group.append("g")
+                .attr('class', 'axis')
+                .attr('transform', 'translate(0,' + chartHeight + ')')
+                .call(xAxis);
+
+        var yAxis = d3.svg.axis()
+                .scale(yScale)
+                .orient('left');
+
+        group.append("g")
+                .attr('class', 'axis')
+                .attr('transform', 'translate(-2,0)')
+                .call(yAxis);
+
+    }
+
+    function colores_google(n) {
+        var colores_g = ["#3366cc", "#ff9900", "#109618", "#dd4477", "#8b0707", "#651067", "#329262", "#5574a6", "#3b3eac"];
+        return colores_g[n];
+    }
+
+
+    function drawPieChart() {
+        //year = $('#selectYear').get(0).options[$('#selectYear').get(0).selectedIndex].value;
+        year = $('#selectYearScatter').get(0).value;
+        pieData = [];
+        getDatasetScatter($('#selectDatasetScatter2').get(0).options[$('#selectDatasetScatter2').get(0).selectedIndex].value, year);
+        var worldData = pieData[7].array;
+        pieData[7].array = 0;
+
+        var width = 250;
+        var height = 400;
+        var radius = Math.min(width, height) / 2;
+        var donutWidth = 75;                            // NEW
+
+        var svg = d3.select('#pieChartScatter');
+        svg.attr('transform', 'translate(' + (width / 2) +
+                ',' + (height / 2) + ')');
+
+
+
+        var arc = d3.svg.arc()
+                .innerRadius(radius - donutWidth)             // NEW
+                .outerRadius(radius);
+
+        var pie = d3.layout.pie()
+                .value(function(d) {
+                    return d.array;
+                })
+                .sort(null);
+
+        var group = svg.append("g")
+                .attr("transform", 'translate(' + (width / 2) +',' + (height / 2) + ')');
+
+        var path = group.selectAll('path')
+                .data(pie(pieData))
+                .enter()
+                .append('path')
+                .attr('d', arc)
+                .attr('fill',function(d){
+                    //return colores_google(majorRegions.indexOf(d.data.name));
+                    return colores_google( majorRegions.indexOf(d.data.name) );
+                })
+                .on("mouseover", function(d, i) {
+                    if(clicked != "true") {
+                        focusonregion = (d.data.name);
+                        drawScatterChart(dataset, dataset1, dataset2);
+                    }
+                })
+                .on("mouseout", function(d,i){
+                    if(clicked != "true") {
+                        focusonregion = null;
+                        drawScatterChart(dataset, dataset1, dataset2);
+                    }
+                })
+                .on("click",function(d,i){
+                    clicked = "true";
+
+
+                    var variable = $('#selectDatasetScatter').get(0).options[$('#selectDatasetScatter').get(0).selectedIndex].value
+                    var variable1 = $('#selectDatasetScatter1').get(0).options[$('#selectDatasetScatter1').get(0).selectedIndex].value
+                    var variable2 = $('#selectDatasetScatter2').get(0).options[$('#selectDatasetScatter2').get(0).selectedIndex].value
+                    //switch (variable) {
+                    //    case "totalPrimaryConsumption":
+
+                    dataset = getSpecificDatasetScatter(variable,year);
+                    dataset1 = getSpecificDatasetScatter(variable1,year);
+                    dataset2 = getSpecificDataset(variable2,year);
+                    drawScatterChart(dataset,dataset1,dataset2);
+                });
+        svg.append("circle")
+                .attr("id","resetButtonScatter")
+                .attr("cx",width/2)
+                .attr("cy",height/2)
+                .attr("r",radius - donutWidth)
+                .style("fill","white")
+                .on("click",function(d,i){
+                    if(clicked == "true") {
+                        clicked = "false";
+                        focusonregion = null;
+
+                        var selection = $('#selectYearScatter').get(0);
+                        //year = selection.options[selection.selectedIndex].value;
+                        year = selection.value;
+                        var selection = $('#selectDatasetScatter').get(0);
+                        dataset = getDatasetScatter(selection.options[selection.selectedIndex].value, year);
+                        var selection = $('#selectDatasetScatter1').get(0);
+                        dataset1 = getDatasetScatter(selection.options[selection.selectedIndex].value, year);
+                        var selection = $('#selectDatasetScatter2').get(0);
+                        dataset2 = getDatasetScatter(selection.options[selection.selectedIndex].value, year);
+
+                        $("#currentYear").get(0).innerHTML = year;
+
+                        // re-draw bar chart for the new locality
+                        drawScatterChart(dataset, dataset1, dataset2, year);
+                        drawPieChart();
+                    }
+                });
+        ;
+    }
+$("#playButtonScatter").click(function(){
+    var interval = setInterval(function(){
+        var selection = $('#selectYearScatter').get(0);
+        year = selection.value;
+        year= parseInt(year);
+        year++;
+        selection.value = year;
+        var selection = $('#selectDatasetScatter').get(0);
+        dataset = getDatasetScatter(selection.options[selection.selectedIndex].value, year);
+        var selection = $('#selectDatasetScatter1').get(0);
+        dataset1 = getDatasetScatter(selection.options[selection.selectedIndex].value, year);
+        var selection = $('#selectDatasetScatter2').get(0);
+        dataset2 = getDatasetScatter(selection.options[selection.selectedIndex].value, year);
+
+        $("#currentYearScatter").get(0).innerHTML = year;
+
+        // re-draw bar chart for the new locality
+        drawScatterChart(dataset, dataset1, dataset2, year);
+        drawPieChart();
+        if(year == 2012)
+        clearInterval(interval);
+    },1000);
+
+    });
+</script>
+</body>
+
+</html>
