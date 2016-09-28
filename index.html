@@ -11,6 +11,8 @@
     <script src="js/PapaParse-4.1.2/papaparse.min.js"></script>
     <script src="js/readFiles.js"></script>
     <style>
+
+
         body{
             background-color: #333333;
         }
@@ -49,6 +51,7 @@
 
 <body>
 <div class="container">
+    <a href="docs.html" style="position: absolute;top:95%;left:85%;font-size: 30px;"><p>Documentation</p></a>
     <h3>Visual Analytics Project :</h3>
     <ul class="nav nav-pills nav-justified">
         <li class="active"><a data-toggle="pill" href="#bar"><h3>Bar Chart</h3></a></li>
@@ -152,7 +155,10 @@
         <div id="scatter" class="tab-pane fade">
             <div>
                 <svg id="scatterChart" class="col-md-9" width="1000" height="600" style="border: 5px solid black;margin-top:20px;">
-                    <text id="label" x="100" y="70"></text>
+                    <text id="energyScatter" x="200" y="30" font-size="30"></text>
+                    <text id="countryScatter" x="380" y="60" font-size="20"></text>
+                    <text id="yAxisScatter" x="-450" y="60" font-size="15" transform="rotate(270)"></text>
+                    <text id="xAxisScatter" x="400" y="570" font-size="15"></text>
                 </svg>
             </div>
             <div class="col-md-2">
@@ -955,7 +961,18 @@
         var maxValuex = d3.max(variable.array);
         var maxValuey = d3.max(variable1.array);
         var maxValuer = d3.max(variable2.array);
-
+        d3.select("#energyScatter")
+                .html("Scatter Plot");
+        d3.select("#yAxisScatter")
+                .html(function(){
+                    var selection = $('#selectDatasetScatter1').get(0);
+                    return selection.options[selection.selectedIndex].innerHTML;
+                });
+        d3.select("#xAxisScatter")
+                .html(function(){
+                    var selection = $('#selectDatasetScatter').get(0);
+                    return selection.options[selection.selectedIndex].innerHTML;
+                });
         // chart size
         var chartWidth = 700;
         var chartHeight = 420;
